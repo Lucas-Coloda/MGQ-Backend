@@ -1,9 +1,10 @@
-package br.com.opet.model;
+package br.com.opet.entity;
 
 import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
 import javax.persistence.Column;
 
 import javax.persistence.Id;
@@ -12,7 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
 
 @Entity
-@Table(name = "q_history")
+@Table(schema = "MANGAQ", name = "q_history")
 public class History implements Serializable {
 	private static final long serialVersionUID = 8500348499302598321L;
 
@@ -46,7 +47,40 @@ public class History implements Serializable {
 		this.resume = resume;
 	}
 
-	public History() {
+	public History(long id, String title, String subtitle, String resume) {
+		this.id = id;
+		this.title = title;
+		this.subtitle = subtitle;
+		this.resume = resume;
+	}
+
+	public History() { }
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("History [");
+		if (id != null) {
+			builder.append("id=");
+			builder.append(id);
+			builder.append(", ");
+		}
+		if (title != null) {
+			builder.append("title=");
+			builder.append(title);
+			builder.append(", ");
+		}
+		if (subtitle != null) {
+			builder.append("subtitle=");
+			builder.append(subtitle);
+			builder.append(", ");
+		}
+		if (resume != null) {
+			builder.append("resume=");
+			builder.append(resume);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 	// Getters and Setters
