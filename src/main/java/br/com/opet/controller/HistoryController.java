@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -20,7 +19,6 @@ import br.com.opet.repository.HistoryRepository;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
-@RequestMapping("/histories")
 public class HistoryController {
 	@Autowired
 	HistoryRepository historyRepository;
@@ -28,32 +26,39 @@ public class HistoryController {
 	@Autowired
 	Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	
-	@GetMapping
+	@GetMapping("/histories")
 	public String list() {
 		return gson.toJson(historyRepository.findAll());
 	}
 	
-	@GetMapping("/retrieve/{id}")
+	@GetMapping("/history/{id}")
 	public String retrieve(@PathVariable Long id) {
 		return gson.toJson(historyRepository.findById(id));
 	}
 	
-	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
-	public String add(@RequestBody String historyJson) {
-		return gson.toJson(historyRepository.save(gson.fromJson(historyJson, History.class)));			
+	@PostMapping(path = "/history", consumes = "application/json", produces = "application/json")
+	public HttpStatus add(@RequestBody String historyJson) {
+		historyRepository.save(gson.fromJson(historyJson, History.class));
+		return HttpStatus.CREATED;
 	}
 
-	@PutMapping(path = "/edit", consumes = "application/json", produces = "application/json")
-	public String edit(@RequestBody String historyJson) {
-		return gson.toJson(historyRepository.save(gson.fromJson(historyJson, History.class)));			
+	@PutMapping(path = "/history", consumes = "application/json", produces = "application/json")
+	public HttpStatus edit(@RequestBody String historyJson) {
+		History history = gson.fromJson(historyJson, History.class);
+		if (historyRepository.findById(history.getId()).isPresent()) {
+			historyRepository.save(history);
+			return HttpStatus.OK;
+    	}
+		return HttpStatus.NOT_FOUND;
 	}
-	// URGENTE: asdasdas
-    @DeleteMapping(path = "/delete/{id}")
-	public HttpStatus delete(@PathVariable Long id) {
+
+    @DeleteMapping(path = "/history")
+	public HttpStatus delete(@RequestBody String historyJson) {
+		long id =  gson.fromJson(historyJson, History.class).getId();
     	if (historyRepository.findById(id).isPresent()) {
     		historyRepository.deleteById(id);    		
-    		return HttpStatus.ACCEPTED;
+    		return HttpStatus.OK;
     	}
-		return HttpStatus.NO_CONTENT;
+		return HttpStatus.NOT_FOUND;
 	}
 }

@@ -15,7 +15,7 @@ public class MainController {
 	@RequestMapping("/**")
 	@ResponseBody
 	public String notFound () {
-		return "Not found404";
+		return "404";
 	}
 
 }
