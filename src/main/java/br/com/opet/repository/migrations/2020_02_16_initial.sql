@@ -1,3 +1,10 @@
+drop table q_timeline;
+drop table q_history;
+drop table q_user;
+drop sequence seq_q_timeline;
+drop sequence seq_q_history;
+drop sequence seq_q_user;
+
 create sequence seq_q_user;
 create sequence seq_q_history;
 create sequence seq_q_timeline;
@@ -20,9 +27,9 @@ CREATE TABLE Q_HISTORY (
 	TITLE VARCHAR2(100), 
 	SUBTITLE VARCHAR2(100), 
     RESUME VARCHAR2(100),
-    AUTOR NUMBER NOT NULL,
+    AUTHOR NUMBER NOT NULL,
     CONSTRAINT pk_id_q_history PRIMARY KEY (ID),
-    CONSTRAINT fk_q_history_q_user FOREIGN KEY (id) REFERENCES q_user (id) ON DELETE CASCADE
+    CONSTRAINT fk_q_history_q_user FOREIGN KEY (AUTHOR) REFERENCES q_user (id) ON DELETE CASCADE
 );
 
 CREATE TABLE Q_TIMELINE (
@@ -39,3 +46,6 @@ CREATE TABLE Q_TIMELINE (
     CONSTRAINT pk_id_q_timeline PRIMARY KEY (ID),
     CONSTRAINT fk_q_timeline_q_history FOREIGN KEY (id) REFERENCES q_user (id) ON DELETE CASCADE
 );
+
+insert into q_user(id, name, last_name, nickname, mail, password, gender, charisma, type_user) values(SEQ_Q_USER.nextval, 'n','ln', 'nn', 'm','p','g',100,0);
+select * from q_user;

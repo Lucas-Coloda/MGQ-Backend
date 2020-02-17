@@ -33,6 +33,9 @@ public class History implements Serializable {
 	@Column(name = "resume")
 	private String resume;
 
+	@Column(name = "author", nullable = false, columnDefinition = "Long")
+	private Long author = new Long(1);
+
 	// Constructors
 	public History(Long id, String title, String subtitle, String resume) {
 		this.id = id;
